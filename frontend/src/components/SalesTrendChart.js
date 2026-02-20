@@ -5,7 +5,7 @@ function SalesTrendChart({ revenueData }) {
   if (!revenueData || Object.keys(revenueData).length === 0) {
     return (
       <div className="chart-container">
-        <h3>Sales Tren</h3>
+        <h3>Sales Trend</h3>
         <div className="empty-chart">No sales data available for the selected period.</div>
       </div>
     );

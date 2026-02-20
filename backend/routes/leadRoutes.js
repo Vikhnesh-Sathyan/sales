@@ -8,6 +8,10 @@ const {
   deleteLead,
   bulkUpdateStatus
 } = require("../controllers/leadController");
+const { protect } = require("../middleware/auth");
+
+// Protect all routes
+router.use(protect);
 
 router.get("/", getAllLeads);
 router.get("/:id", getLeadById);

@@ -16,7 +16,9 @@ app.get("/", (req, res) => {
 
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const leadRoutes = require("./routes/leadRoutes");
+const authRoutes = require("./routes/authRoutes");
 
+app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/leads", leadRoutes);
 
