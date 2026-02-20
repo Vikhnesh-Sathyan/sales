@@ -24,18 +24,35 @@ function App() {
       );
       setData(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching data:", err);
+      setData(null);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  if (loading) return <h2 className="center">Loading...</h2>;
-  if (!data) return <h2 className="center">No Data Available</h2>;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <h2>Loading Dashboard Data...</h2>
+      </div>
+    );
+  }
+  
+  if (!data) {
+    return (
+      <div className="error-container">
+        <h2>Unable to Load Data</h2>
+        <p>Please check if the backend server is running.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container">
       <h1>Sales Dashboard</h1>
-      <DateFilter setRange={setRange} />
+      <DateFilter setRange={setRange} currentRange={range} />
       <KPICards kpis={data.kpis} />
       <div className="charts">
         <SalesTrendChart revenueData={data.revenueByDate} />

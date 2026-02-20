@@ -1,23 +1,37 @@
 import React from "react";
 
 function StatusTable({ statusCounts }) {
+  const allStatuses = [
+    "New",
+    "Contacted",
+    "Follow Up",
+    "Appointment Booked",
+    "Converted",
+    "Lost"
+  ];
+
+  if (!statusCounts) return null;
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Status</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.entries(statusCounts).map(([status, count]) => (
-          <tr key={status}>
-            <td>{status}</td>
-            <td>{count}</td>
+    <div className="status-table-container">
+      <h2>Lead Status Summary</h2>
+      <table className="status-table">
+        <thead>
+          <tr>
+            <th>Lead Status</th>
+            <th>Count</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {allStatuses.map((status) => (
+            <tr key={status}>
+              <td>{status}</td>
+              <td>{statusCounts[status] || 0}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

@@ -18,27 +18,72 @@ async function seedData() {
   try {
     await Lead.deleteMany(); // Clear old data
 
-    for (let i = 1; i <= 100; i++) {
+    const leads = [];
+    const now = new Date();
 
-      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    // Create leads with better distribution across dates and statuses
+    for (let i = 1; i <= 150; i++) {
+      // Distribute statuses more realistically
+      // More "New" and "Contacted" leads, fewer "Converted"
+      let status;
+      const rand = Math.random();
+      if (rand < 0.25) {
+        status = "New";
+      } else if (rand < 0.45) {
+        status = "Contacted";
+      } else if (rand < 0.60) {
+        status = "Follow Up";
+      } else if (rand < 0.75) {
+        status = "Appointment Booked";
+      } else if (rand < 0.90) {
+        status = "Converted";
+      } else {
+        status = "Lost";
+      }
 
-      await Lead.create({
+      // Distribute dates over the last 30 days, with more recent dates having more leads
+      // Using Math.random() * Math.random() creates a bias towards more recent dates
+      const daysAgo = Math.floor(Math.random() * Math.random() * 30);
+      const createdAt = new Date(now);
+      createdAt.setDate(createdAt.getDate() - daysAgo);
+      createdAt.setHours(
+        Math.floor(Math.random() * 24),
+        Math.floor(Math.random() * 60),
+        0,
+        0
+      );
+      
+      // Ensure date is not in the future
+      if (createdAt > now) {
+        createdAt.setTime(now.getTime());
+      }
+
+      const revenue = status === "Converted"
+        ? Math.floor(Math.random() * 15000) + 1000
+        : 0;
+
+      leads.push({
         name: `Lead ${i}`,
-        status: randomStatus,
-        revenue: randomStatus === "Converted"
-          ? Math.floor(Math.random() * 10000) + 1000
-          : 0,
-        createdAt: new Date(
-          Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000
-        )
+        status,
+        revenue,
+        createdAt
       });
     }
 
-    console.log("✅ 100 Leads Inserted Successfully");
+    await Lead.insertMany(leads);
+
+    console.log("✅ 150 Leads Inserted Successfully");
+    console.log("📊 Data distribution:");
+    const counts = await Lead.aggregate([
+      { $group: { _id: "$status", count: { $sum: 1 } } }
+    ]);
+    counts.forEach(item => {
+      console.log(`   ${item._id}: ${item.count}`);
+    });
     process.exit();
 
   } catch (error) {
-    console.error(error);
+    console.error("Error seeding data:", error);
     process.exit(1);
   }
 }
