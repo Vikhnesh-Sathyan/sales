@@ -51,6 +51,7 @@ A full-stack sales dashboard web application for internal business monitoring wi
 - **jsonwebtoken** - JWT token generation and verification library
 - **bcryptjs** - Password hashing for secure password storage
 - CORS
+- JWT Authentication
 
 ### Frontend
 - React
@@ -60,6 +61,7 @@ A full-stack sales dashboard web application for internal business monitoring wi
 - Axios (for API calls with JWT token injection)
 - Context API for authentication state management
 - CSS3
+- React Router DOM
 
 ## Prerequisites
 
@@ -83,7 +85,7 @@ npm install
 
 3. Create a `.env` file in the backend directory:
 ```env
-MONGO_URI=mongodb://localhost:27017/sales-dashboard
+MONGO_URI=your_mongodb_connection_string
 PORT=5000
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_EXPIRE=7d
