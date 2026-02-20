@@ -9,7 +9,6 @@ A full-stack sales dashboard web application for internal business monitoring wi
 - **User Login**: Secure login with JWT (JSON Web Token) authentication
 - **JWT Token Management**: Tokens are automatically stored in localStorage and included in API requests
 - **Protected Routes**: All dashboard and lead management routes require JWT authentication
-- **Session Management**: Automatic token storage and management
 - **Auto-logout**: Automatic logout on token expiration (default: 7 days)
 
 ### Dashboard
@@ -51,7 +50,6 @@ A full-stack sales dashboard web application for internal business monitoring wi
 - **jsonwebtoken** - JWT token generation and verification library
 - **bcryptjs** - Password hashing for secure password storage
 - CORS
-- JWT Authentication
 
 ### Frontend
 - React
@@ -60,12 +58,12 @@ A full-stack sales dashboard web application for internal business monitoring wi
 - Recharts (for data visualization)
 - Axios (for API calls with JWT token injection)
 - Context API for authentication state management
-- CSS3
+- CSS
 - React Router DOM
 
 ## Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js 
 - MongoDB (local installation or MongoDB Atlas account)
 - npm or yarn
 
@@ -160,10 +158,9 @@ The frontend will run on `http://localhost:3000`
    - Use search bar to find specific leads
    - Filter by status using the dropdown
    - Click "Add New Lead" to create a new lead
-   - Click edit icon (✏️) to modify a lead
-   - Click delete icon (🗑️) to remove a lead (with confirmation)
+   - Click edit icon  to modify a lead
+   - Click delete icon  to remove a lead (with confirmation)
    - Change status directly from the table using the colored badge dropdown
-   - Select multiple leads for bulk operations
 
 ## API Endpoints
 
@@ -238,11 +235,6 @@ Authorization: Bearer <jwt-token>
 Returns dashboard data for the specified date range.
 
 **Note:** Requires JWT authentication. Include JWT token in Authorization header.
-
-**Headers:**
-```
-Authorization: Bearer <jwt-token>
-```
 
 **Query Parameters:**
 - `days` (optional): Number of days to look back (default: 7)
@@ -416,7 +408,6 @@ This ensures that all converted leads have revenue data for accurate dashboard m
 - Revenue is displayed in USD currency format
 - **JWT Authentication**: 
   - JWT tokens are automatically stored in browser localStorage after login/register
-  - Tokens are automatically included in all API requests via axios interceptors
   - Tokens expire after 7 days (configurable via `JWT_EXPIRE` in `.env`)
   - Invalid or expired tokens automatically redirect to login page
 - The dashboard updates automatically when:
@@ -441,10 +432,6 @@ This ensures that all converted leads have revenue data for accurate dashboard m
 - Clear browser cache and localStorage if authentication issues occur
 - Make sure all dependencies are installed: `npm install`
 
-### Database Issues
-- Run `node seed.js` again to reset and populate the database
-- Check MongoDB connection string in `.env` file
-- Verify MongoDB is accessible
 
 ### Authentication Issues (JWT)
 - Ensure `JWT_SECRET` is set in `.env` file (required for JWT token signing)
@@ -458,7 +445,6 @@ This ensures that all converted leads have revenue data for accurate dashboard m
 
 - **JWT_SECRET**: Use a strong, random secret key in production (minimum 32 characters recommended)
   - Never commit `JWT_SECRET` to version control
-  - Use different secrets for development and production environments
 - **JWT Tokens**: 
   - Tokens are signed using the `JWT_SECRET` to prevent tampering
   - Tokens contain user ID and expiration time
@@ -468,6 +454,4 @@ This ensures that all converted leads have revenue data for accurate dashboard m
 - **Protected Routes**: All sensitive endpoints require valid JWT authentication
 - **CORS**: Configured for development; adjust allowed origins for production
 
-## License
 
-This project is created for assignment purposes.
