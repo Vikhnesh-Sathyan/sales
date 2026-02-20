@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import KPICards from "./components/KPICards";
 import StatusTable from "./components/StatusTable";
-
+import SalesTrendChart from "./components/SalesTrendChart";
+import StatusPieChart from "./components/StatusPieChart";
+import DateFilter from "./components/DateFilter";
 import "./App.css";
 
 function App() {
