@@ -4,11 +4,22 @@ A full-stack sales dashboard web application for internal business monitoring. T
 
 ## Features
 
+### Dashboard
 - **KPI Summary**: Displays Total Leads, Contacted Leads, Sales Closed, and Total Revenue
 - **Lead Status Summary**: Table showing all lead statuses with counts
 - **Sales Trend Chart**: Line chart showing revenue trends over time
 - **Lead Status Distribution**: Pie chart displaying lead status distribution
 - **Date Range Filter**: Filter data by Last 7 Days or Last 30 Days
+
+### Lead Management (CRUD)
+- **Create Leads**: Add new leads with name, email, phone, company, status, estimated value, and notes
+- **Read/View Leads**: View all leads in a sortable, filterable table
+- **Update Leads**: Edit lead information and change status directly from the table
+- **Delete Leads**: Remove leads from the system
+- **Search & Filter**: Search by name, email, company, or phone; filter by status
+- **Bulk Operations**: Select multiple leads and update their status simultaneously
+- **Auto Revenue Calculation**: Revenue is automatically calculated when a lead status changes to "Converted"
+- **Auto Dashboard Update**: Dashboard automatically refreshes when leads are created, updated, or deleted
 
 ## Tech Stack
 
@@ -94,7 +105,9 @@ The frontend will run on `http://localhost:3000`
 
 ## API Endpoints
 
-### GET `/api/dashboard`
+### Dashboard
+
+#### GET `/api/dashboard`
 Returns dashboard data for the specified date range.
 
 **Query Parameters:**
@@ -123,6 +136,68 @@ Returns dashboard data for the specified date range.
     "2024-01-02": 7500,
     ...
   }
+}
+```
+
+### Leads
+
+#### GET `/api/leads`
+Get all leads with optional search and filter.
+
+**Query Parameters:**
+- `search` (optional): Search by name, email, company, or phone
+- `status` (optional): Filter by lead status
+- `sortBy` (optional): Field to sort by (default: "createdAt")
+- `sortOrder` (optional): "asc" or "desc" (default: "desc")
+
+#### GET `/api/leads/:id`
+Get a single lead by ID.
+
+#### POST `/api/leads`
+Create a new lead.
+
+**Request Body:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+1-555-123-4567",
+  "company": "Tech Corp",
+  "status": "New",
+  "estimatedValue": 5000,
+  "notes": "Interested in our premium package"
+}
+```
+
+#### PUT `/api/leads/:id`
+Update an existing lead.
+
+**Request Body:** (all fields optional)
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+1-555-123-4567",
+  "company": "Tech Corp",
+  "status": "Converted",
+  "estimatedValue": 5000,
+  "notes": "Successfully converted"
+}
+```
+
+**Note:** When status is changed to "Converted", revenue is automatically calculated if not provided.
+
+#### DELETE `/api/leads/:id`
+Delete a lead.
+
+#### PATCH `/api/leads/bulk-status`
+Bulk update status for multiple leads.
+
+**Request Body:**
+```json
+{
+  "leadIds": ["id1", "id2", "id3"],
+  "status": "Converted"
 }
 ```
 
@@ -163,15 +238,29 @@ The application tracks the following lead statuses:
 - **Contacted**: Leads that have been contacted
 - **Follow Up**: Leads requiring follow-up
 - **Appointment Booked**: Leads with scheduled appointments
-- **Converted**: Successfully closed sales
+- **Converted**: Successfully closed sales (revenue is auto-calculated)
 - **Lost**: Lost opportunities
+
+## Revenue Auto-Calculation
+
+When a lead's status is changed to "Converted":
+- If `revenue` is provided, it will be used
+- If `revenue` is 0 or not provided, but `estimatedValue` exists, `estimatedValue` will be used as revenue
+- If both are 0 or not provided, a random revenue between $1,000 and $16,000 will be assigned
+
+This ensures that all converted leads have revenue data for accurate dashboard metrics.
 
 ## Development Notes
 
 - The application is designed for a minimum resolution of 1366 × 768
 - All dates are displayed in the user's local timezone
 - Revenue is displayed in USD currency format
-- The dashboard updates automatically when the date range filter is changed
+- The dashboard updates automatically when:
+  - The date range filter is changed
+  - Leads are created, updated, or deleted
+  - Lead statuses are changed
+- Status changes in the lead table trigger immediate dashboard refresh
+- Search is debounced (300ms) for better performance
 
 ## Troubleshooting
 

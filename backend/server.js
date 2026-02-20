@@ -15,7 +15,10 @@ app.get("/", (req, res) => {
 });
 
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const leadRoutes = require("./routes/leadRoutes");
+
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/leads", leadRoutes);
 
 // Connect MongoDB
 mongoose.connect(process.env.MONGO_URI)

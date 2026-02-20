@@ -5,16 +5,19 @@ import StatusTable from "./components/StatusTable";
 import SalesTrendChart from "./components/SalesTrendChart";
 import StatusPieChart from "./components/StatusPieChart";
 import DateFilter from "./components/DateFilter";
+import LeadList from "./components/LeadList";
 import "./App.css";
 
 function App() {
   const [data, setData] = useState(null);
   const [range, setRange] = useState(7);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     fetchData(range);
-  }, [range]);
+  }, [range, refreshTrigger]);
 
   const fetchData = async (days) => {
     setLoading(true);
@@ -31,7 +34,12 @@ function App() {
     }
   };
 
-  if (loading) {
+  const handleLeadChange = () => {
+    // Trigger dashboard refresh when leads change
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  if (loading && !data) {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
@@ -39,26 +47,49 @@ function App() {
       </div>
     );
   }
-  
-  if (!data) {
-    return (
-      <div className="error-container">
-        <h2>Unable to Load Data</h2>
-        <p>Please check if the backend server is running.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="container">
-      <h1>Sales Dashboard</h1>
-      <DateFilter setRange={setRange} currentRange={range} />
-      <KPICards kpis={data.kpis} />
-      <div className="charts">
-        <SalesTrendChart revenueData={data.revenueByDate} />
-        <StatusPieChart statusCounts={data.statusCounts} />
+      <div className="app-header">
+        <h1>Sales Dashboard</h1>
+        <div className="tab-navigation">
+          <button
+            className={`tab-button ${activeTab === "dashboard" ? "active" : ""}`}
+            onClick={() => setActiveTab("dashboard")}
+          >
+            📊 Dashboard
+          </button>
+          <button
+            className={`tab-button ${activeTab === "leads" ? "active" : ""}`}
+            onClick={() => setActiveTab("leads")}
+          >
+            👥 Lead Management
+          </button>
+        </div>
       </div>
-      <StatusTable statusCounts={data.statusCounts} />
+
+      {activeTab === "dashboard" ? (
+        <>
+          {!data ? (
+            <div className="error-container">
+              <h2>Unable to Load Data</h2>
+              <p>Please check if the backend server is running.</p>
+            </div>
+          ) : (
+            <>
+              <DateFilter setRange={setRange} currentRange={range} />
+              <KPICards kpis={data.kpis} />
+              <div className="charts">
+                <SalesTrendChart revenueData={data.revenueByDate} />
+                <StatusPieChart statusCounts={data.statusCounts} />
+              </div>
+              <StatusTable statusCounts={data.statusCounts} />
+            </>
+          )}
+        </>
+      ) : (
+        <LeadList onStatusChange={handleLeadChange} />
+      )}
     </div>
   );
 }

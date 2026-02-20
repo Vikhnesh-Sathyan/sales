@@ -58,14 +58,32 @@ async function seedData() {
         createdAt.setTime(now.getTime());
       }
 
+      const estimatedValue = Math.floor(Math.random() * 20000) + 500;
       const revenue = status === "Converted"
         ? Math.floor(Math.random() * 15000) + 1000
         : 0;
 
+      // Generate realistic names and contact info
+      const firstNames = ["John", "Jane", "Michael", "Sarah", "David", "Emily", "Robert", "Jessica", "William", "Ashley", "James", "Amanda", "Christopher", "Melissa", "Daniel", "Michelle"];
+      const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Wilson", "Anderson", "Thomas", "Taylor"];
+      const companies = ["Tech Corp", "Digital Solutions", "Innovate Inc", "Global Systems", "Future Tech", "Smart Solutions", "Cloud Services", "Data Analytics", "Software Plus", "Tech Innovations"];
+      
+      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const name = `${firstName} ${lastName}`;
+      const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${companies[Math.floor(Math.random() * companies.length)].toLowerCase().replace(/\s+/g, '')}.com`;
+      const phone = `+1-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`;
+      const company = companies[Math.floor(Math.random() * companies.length)];
+
       leads.push({
-        name: `Lead ${i}`,
+        name,
+        email,
+        phone,
+        company,
         status,
+        estimatedValue,
         revenue,
+        notes: status === "Converted" ? "Successfully converted lead" : "",
         createdAt
       });
     }
