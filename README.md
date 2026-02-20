@@ -28,12 +28,14 @@ A full-stack sales dashboard web application for internal business monitoring. T
 - Express.js
 - MongoDB (Mongoose)
 - CORS
+- JWT Authentication
 
 ### Frontend
 - React
 - Recharts (for data visualization)
 - Axios (for API calls)
 - CSS3
+- React Router DOM
 
 ## Prerequisites
 
@@ -57,8 +59,9 @@ npm install
 
 3. Create a `.env` file in the backend directory:
 ```env
-MONGO_URI=mongodb://localhost:27017/sales-dashboard
+MONGO_URI=your_mongodb_connection_string
 PORT=5000
+JWT_SECRET=your_secret_key
 ```
 
 For MongoDB Atlas, use:
@@ -208,10 +211,17 @@ sales/
 ├── backend/
 │   ├── controllers/
 │   │   └── dashboardController.js
-│   ├── models/
-│   │   └── Lead.js
-│   ├── routes/
-│   │   └── dashboardRoutes.js
+├── middleware/
+│       └── authMiddleware.js
+├── controllers/
+│       └── authController.js
+├── routes/
+│       └── authRoutes.js
+├── models/
+│       └── User.js
+│       └── Lead.js
+│── routes/
+│     └── dashboardRoutes.js
 │   ├── seed.js
 │   ├── server.js
 │   └── package.json
